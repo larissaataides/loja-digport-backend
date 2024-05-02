@@ -1,8 +1,14 @@
 package main
 
-import "github.com/larissaataides/loja-digport-backend/model"
+import (
+	"errors"
 
-func criarEstoque() []model.Produto { //retorno da nossa função, retorna um array e do tipo produto
+	"github.com/larissaataides/loja-digport-backend/model"
+)
+
+var ListaDeProdutos []model.Produto = []model.Produto{}
+
+func criarEstoque() { //retorno da nossa função, retorna um array e do tipo produto
 	produtos := []model.Produto{
 		{
 			Id:                  "1",
@@ -36,10 +42,10 @@ func criarEstoque() []model.Produto { //retorno da nossa função, retorna um ar
 			Imagem:              "livro.png",
 		},
 	}
-	return produtos
+	ListaDeProdutos = produtos
 }
 
-func filtrarProdutos(nome string) []model.Produto {
+/* func filtrarProdutos(nome string) []model.Produto {
 	//criar uma função para buscar produtos pelo tipo dele ex: http/produtos?nome
 
 	produtos := []model.Produto{
@@ -54,4 +60,29 @@ func filtrarProdutos(nome string) []model.Produto {
 		},
 	}
 	return produtos
+}
+*/
+
+func buscaPorNome(nome string) []model.Produto {
+
+	resultado := []model.Produto{}
+
+	for _, produto := range ListaDeProdutos {
+		if produto.Nome == nome {
+			resultado = append(resultado, produto)
+		}
+	}
+	return resultado
+}
+
+func adicionarProduto(produtoNovo model.Produto) error {
+	for _, produtoDaLista := range ListaDeProdutos {
+		if produtoNovo.Id == produtoDaLista.Id {
+			return errors.New("produto com ID já cadastrada")
+		}
+	}
+
+	ListaDeProdutos = append(ListaDeProdutos, produtoNovo)
+	return nil
+
 }
